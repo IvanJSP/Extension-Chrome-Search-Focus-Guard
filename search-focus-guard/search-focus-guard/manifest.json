@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Search Focus Guard",
+  "version": "1.7.0",
+  "description": "Busca texto visible en la página y solicita confirmación antes de salir si hay coincidencias.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "action": {
+    "default_title": "Abrir Search Focus Guard",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "commands": {
+    "open-search-guard-v2": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E"
+      },
+      "description": "Abrir la búsqueda de Search Focus Guard"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
