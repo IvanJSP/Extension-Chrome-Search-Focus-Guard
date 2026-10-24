@@ -312,6 +312,7 @@
   function toggleBar() {
     if (host) {
       input.focus();
+      restoreConfiguredSearch(input);
       return;
     }
     createBar();
