@@ -289,7 +289,6 @@
     shadow.querySelector(".close").addEventListener("click", closeBar);
     (document.body || document.documentElement).appendChild(host);
     input.focus();
-    getSearchableTextNodes();
 
     const barInput = input;
     chrome.storage.local.get(["defaultSearch", "lastSearch"]).then(({ defaultSearch, lastSearch }) => {
