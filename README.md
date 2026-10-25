@@ -23,6 +23,7 @@ Search Focus Guard is an unpacked Chrome extension that searches visible page te
 | `Enter` | Move to the next match while the search field is focused |
 | `Shift+Enter` | Move to the previous match while the search field is focused |
 | `Esc` | Close the search bar |
+| `Ctrl+W` | With the optional AutoHotkey macro running, ask before closing the current Chrome tab |
 
 The macro intercepts `Ctrl+V` in Chrome, so that shortcut will not paste from the clipboard there.
 
@@ -45,13 +46,12 @@ You can also open the search bar from the extension icon.
 
 ## Optional AutoHotkey macro
 
-`Active Search Focus Guard.ahk` is separate from the extension and requires AutoHotkey v2. Run it independently. While Chrome is active, it maps `Ctrl+V` to the extension shortcut and sends `Right` after a short delay. That synthetic keyboard input may count as page interaction in Chrome and allow the native leave-page confirmation to appear when matches exist, but Chrome decides whether to show the dialog and this is not guaranteed. The macro does **not** block `Ctrl+W`.
+`Active Search Focus Guard.ahk` is separate from the extension and requires AutoHotkey v2. Run it independently. The macro intercepts `Ctrl+V` in Chrome, so that shortcut will not paste from the clipboard there. It also asks for confirmation before forwarding `Ctrl+W`, including when the current tab is pinned.
+
 
 ## Closing tabs and Chrome limitations
 
-When there is at least one match, the extension requests Chrome's native leave-page confirmation. Chrome controls whether that confirmation is shown, may require prior user interaction with the page, and still lets the user confirm leaving. Neither this extension nor its included macro currently blocks `Ctrl+W` conditionally based on search results. There is no reliable extension API to prevent Chrome from closing a tab.
-
-Chrome also restricts access to internal pages such as `chrome://` and the Chrome Web Store. The extension cannot read closed Shadow DOM roots or cross-origin frames. Its search bar is independent of Chrome's native `Ctrl+F` find bar.
+When there is at least one match, the extension requests Chrome's native leave-page confirmation. Chrome controls whether that confirmation is shown, may require prior user interaction with the page, and still lets the user confirm leaving. The optional AutoHotkey macro adds a separate confirmation to every `Ctrl+W` in Chrome because the extension cannot reliably intercept that browser shortcut or determine whether a tab is pinned.
 
 ## License
 
