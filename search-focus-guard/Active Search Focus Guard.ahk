@@ -9,4 +9,12 @@ $^v::
 {
     SendInput "^+e"
 }
+
+$^+w::
+{
+    answer := MsgBox("¿Cerrar esta ventana de Chrome y todas sus pestañas?", "Confirmar cierre", "YesNo 0x1000 0x10000")
+    if (answer = "Yes") {
+        SendInput "^+w"
+    }
+}
 #HotIf
