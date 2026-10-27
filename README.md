@@ -25,7 +25,7 @@ Search Focus Guard is an unpacked Chrome extension that searches visible page te
 | `Esc` | Close the search bar |
 | `Ctrl+W` | With the optional AutoHotkey macro running, ask before closing the current Chrome tab |
 
-The macro intercepts `Ctrl+V` in Chrome, so that shortcut will not paste from the clipboard there.
+The macro intercepts `Ctrl+V` in Chrome, so that shortcut will not paste from the clipboard there. It also intercepts `Ctrl+Shift+W`; choosing **No** or dismissing the confirmation leaves the window open. Choosing **Yes** sends Chrome's original close-window shortcut.
 
 ## Set a default search
 
@@ -46,12 +46,16 @@ You can also open the search bar from the extension icon.
 
 ## Optional AutoHotkey macro
 
-`Active Search Focus Guard.ahk` is separate from the extension and requires AutoHotkey v2. Run it independently. The macro intercepts `Ctrl+V` in Chrome, so that shortcut will not paste from the clipboard there. It also asks for confirmation before forwarding `Ctrl+W`, including when the current tab is pinned.
+`Active Search Focus Guard.ahk` is separate from the extension and requires AutoHotkey v2. Run it independently. While Chrome is active, it maps `Ctrl+V` to the extension shortcut and asks for confirmation before forwarding `Ctrl+Shift+W`. The macro d
 
 
 ## Closing tabs and Chrome limitations
 
-When there is at least one match, the extension requests Chrome's native leave-page confirmation. Chrome controls whether that confirmation is shown, may require prior user interaction with the page, and still lets the user confirm leaving. The optional AutoHotkey macro adds a separate confirmation to every `Ctrl+W` in Chrome because the extension cannot reliably intercept that browser shortcut or determine whether a tab is pinned.
+When there is at least one match, the extension requests Chrome's native leave-page confirmation. With no matches, the extension does not block closing or request confirmation. Chrome controls whether the confirmation is shown, may require prior user interaction with the page, and still lets the user confirm leaving.
+
+The optional AutoHotkey macro independently confirms `Ctrl+Shift+W` whenever Chrome is focused, regardless of search matches. This works only while the macro is running; Chrome extensions cannot reliably intercept this window-closing shortcut on their own. Closing Chrome through other means, such as the window's close button, is not intercepted by the macro.
+
+Chrome also restricts access to internal pages such as `chrome://` and the Chrome Web Store. The extension cannot read closed Shadow DOM roots or cross-origin frames. Its search bar is independent of Chrome's native `Ctrl+F` find bar.
 
 ## License
 
