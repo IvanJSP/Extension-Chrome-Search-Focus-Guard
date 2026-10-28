@@ -24,6 +24,7 @@
   let guardStatus;
   let matches = [];
   let hasMatches = false;
+  let searchPending = false;
   let highlightedDocuments = new Set();
   let mutationObservers = new Map();
   let mutationTimer;
@@ -220,6 +221,7 @@
     guardStatus = undefined;
     matches = [];
     hasMatches = false;
+    searchPending = false;
     highlightedDocuments.clear();
     for (const observer of mutationObservers.values()) {
       observer.disconnect();
@@ -265,6 +267,7 @@
     let inputChanged = false;
     input.addEventListener("input", () => {
       inputChanged = true;
+      searchPending = false;
       chrome.storage.local.set({ lastSearch: input.value }).catch(error => {
         console.error("Search Focus Guard could not save the last search.", error);
       });
@@ -291,6 +294,7 @@
     input.focus();
 
     const barInput = input;
+    searchPending = true;
     chrome.storage.local.get(["defaultSearch", "lastSearch"]).then(({ defaultSearch, lastSearch }) => {
       if (inputChanged || input !== barInput) {
         return;
@@ -303,7 +307,11 @@
         input.value = searchText;
         updateSearch();
       }
+      searchPending = false;
     }).catch(error => {
+      if (input === barInput) {
+        searchPending = false;
+      }
       console.error("Search Focus Guard could not restore the saved search.", error);
     });
   }
@@ -318,6 +326,7 @@
   }
 
   function restoreConfiguredSearch(targetInput) {
+    searchPending = true;
     chrome.storage.local.get(["defaultSearch", "lastSearch"]).then(({ defaultSearch, lastSearch }) => {
       if (input !== targetInput) {
         return;
@@ -328,13 +337,17 @@
         : lastSearch;
       targetInput.value = typeof searchText === "string" ? searchText : "";
       updateSearch();
+      searchPending = false;
     }).catch(error => {
+      if (input === targetInput) {
+        searchPending = false;
+      }
       console.error("Search Focus Guard could not restore the configured search.", error);
     });
   }
 
   window.addEventListener("beforeunload", event => {
-    if (hasMatches) {
+    if (hasMatches || searchPending) {
       event.preventDefault();
       event.returnValue = " ";
     }
