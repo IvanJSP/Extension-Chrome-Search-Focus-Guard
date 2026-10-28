@@ -8,6 +8,13 @@ SetStoreCapsLockMode False
 $^v::
 {
     SendInput "^+e"
+    Sleep 100
+    SendInput "{Right}"
+}
+
+$^w::
+{
+    SendInput "^w"
 }
 
 $^+w::
